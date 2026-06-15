@@ -1,35 +1,35 @@
 #!/bin/bash
 # Русификация ZCode 3.0.1
+# Заменяет китайский язык на русский в оригинальном приложении.
+# После патча в настройках: English + Русский.
+#
 # Использование: ./patch.sh [путь к ZCode.app]
-# По умолчанию: /Applications/ZCode.app → ZCode-ru.app в текущей папке
+# По умолчанию: /Applications/ZCode.app
 
 set -e
 
-ORIG="${1:-/Applications/ZCode.app}"
-COPY="ZCode-ru.app"
+APP="${1:-/Applications/ZCode.app}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo "=== Русификация ZCode ==="
-echo "Оригинал: $ORIG"
-echo "Копия:    $COPY"
+echo "Приложение: $APP"
 
-# 1. Копия через ditto (сохраняет подпись)
-echo "[1/5] Копирование..."
-rm -rf "$COPY"
-ditto "$ORIG" "$COPY"
+if [ ! -d "$APP" ]; then
+  echo "❌ Приложение не найдено: $APP"
+  exit 1
+fi
 
-# 2. Извлечь asar
-echo "[2/5] Извлечение app.asar..."
-ASAR="$COPY/Contents/Resources/app.asar"
+# 1. Извлечь app.asar
+echo "[1/4] Извлечение app.asar..."
+ASAR="$APP/Contents/Resources/app.asar"
 TMP="/tmp/zcode_patch_$$"
 rm -rf "$TMP"
 npx --yes @electron/asar extract "$ASAR" "$TMP" 2>/dev/null
 
-# 3. Применить патчи
-echo "[3/5] Патчи..."
+# 2. Применить патчи
+echo "[2/4] Патчи..."
 
-# 3a. Заменить sv (китайский) на русский словарь
 python3 << 'PYEOF'
 import json, os
 
@@ -37,7 +37,6 @@ PROJECT = os.environ.get('PROJECT_DIR', os.path.dirname(os.path.dirname(os.path.
 TMP = os.environ.get('TMP', '/tmp/zcode_patch')
 
 # Найти файлы
-import glob
 assets = f'{TMP}/out/renderer/assets/'
 chunk = None
 for f in os.listdir(assets):
@@ -65,12 +64,16 @@ if not os.path.exists(ru_path):
 with open(ru_path, 'r') as f:
     ru = json.load(f)
 
-# === ПАТЧ CHUNK: заменить sv ===
+# === ПАТЧ CHUNK: заменить китайский (sv) на русский ===
 print(f'  Patching chunk: {os.path.basename(chunk)}')
 with open(chunk, 'r') as f:
     content = f.read()
 
 sv_start = content.find('sv={')
+if sv_start == -1:
+    print('ERROR: sv dictionary not found in chunk')
+    exit(1)
+
 brace = 0; started = False; sv_end = -1
 for i in range(sv_start, len(content)):
     c = content[i]
@@ -93,7 +96,6 @@ print(f'  Patching index: {os.path.basename(index_js)}')
 with open(index_js, 'r') as f:
     idx = f.read()
 
-import re
 patches_index = [
     ('nNt={"zh-CN":at,"en-US":Ze}', 'nNt={"zh-CN":at,"en-US":Ze,"ru":at}'),
     ('(wut()===`en-US`?Ze:at)', '(wut()===`en-US`?Ze:wut()===`ru`?at:at)'),
@@ -154,15 +156,16 @@ for fname in os.listdir(main_dir):
 print('  Done')
 PYEOF
 
-# 4. Перепаковать asar
-echo "[4/5] Упаковка app.asar..."
+# 3. Перепаковать asar
+echo "[3/4] Упаковка app.asar..."
 npx --yes @electron/asar pack "$TMP" "$ASAR" 2>/dev/null
 rm -rf "$TMP"
 
-# 5. Снять карантин и подписать
-echo "[5/5] Подпись..."
-xattr -cr "$COPY"
-codesign --force --deep --sign - "$COPY" 2>/dev/null
+# 4. Подписать
+echo "[4/4] Подпись..."
+xattr -cr "$APP"
+codesign --force --deep --sign - "$APP" 2>/dev/null
 
-echo "=== Готово: $COPY ==="
-echo "Запуск: open $COPY"
+echo ""
+echo "=== Готово! ==="
+echo "Открой ZCode — в настройках будут English и Русский."
