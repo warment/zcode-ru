@@ -1,6 +1,6 @@
 {
   "chat.changeSummary.filesChanged.one": "{count} файл изменён",
-  "chat.changeSummary.filesChanged.other": "{count} файлов изменено",
+  "chat.changeSummary.filesChanged.other": "Изменено файлов: {count}",
   "chat.changeSummary.expand": "Развернуть изменённые файлы",
   "chat.changeSummary.collapse": "Свернуть изменённые файлы",
   "chat.changeSummary.diffUnavailable": "Предпросмотр дифа сейчас недоступен.",

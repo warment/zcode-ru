@@ -9,6 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { extractFile } from '@electron/asar';
+import { exposeIntlLocale, patchExploreCounts } from './patch-explore-counts.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const APP = '/Applications/ZCode.app';
@@ -112,6 +113,7 @@ if (!SPIKE) {
 const intlFile = readdirSync(A).find(f => /^IntlProvider-[\w-]+\.js$/.test(f));
 const iP = join(A, intlFile);
 let c = readFileSync(iP, 'utf8');
+c = exposeIntlLocale(c);
 log('IntlProvider:', intlFile);
 c = patch('реестр+ru-словарь', c,
   /(\w+)=\{"zh-CN":(\w+),"en-US":(\w+)\}/,
@@ -136,6 +138,7 @@ const stylesFile = readdirSync(A).find(f => /^styles-[\w-]+\.js$/.test(f) &&
   readFileSync(join(A, f), 'utf8').includes('settings.locale.zh-CN'));
 const sP = join(A, stylesFile);
 let s = readFileSync(sP, 'utf8');
+s = patchExploreCounts(s);
 log('styles:', stylesFile);
 s = patch('селектор: option ru-RU', s,
   /\(0,([\w$]+)\.jsx\)\((\w+),\{value:`en-US`,children:(\w+)\.formatMessage\(\{id:`settings\.locale\.en-US`\}\)\}\)/g,

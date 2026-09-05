@@ -150,7 +150,7 @@
   "feedback.submit.usage.titleLabel": "Заголовок вопроса",
   "feedback.submit.usage.titlePlaceholder": "Например: непонятно, как настроить удалённое подключение",
   "feedback.submit.usage.descriptionLabel": "Шаг, на котором застряли",
-  "feedback.submit.usage.descriptionPlaceholder": "Опишите, что вы делаете, на каком шаге застряли, какой видели промпт и как нам лучше объяснить или показать.",
+  "feedback.submit.usage.descriptionPlaceholder": "Опишите, что вы пытаетесь сделать, на каком шаге застряли, какое сообщение увидели и какие пояснения или инструкции вам нужны.",
   "feedback.submit.usage.helper.1": "Текущая задача",
   "feedback.submit.usage.helper.2": "Шаг, на котором застряли",
   "feedback.submit.usage.helper.3": "Что уже пробовали",

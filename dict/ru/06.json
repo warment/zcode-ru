@@ -122,7 +122,7 @@
   "settings.plugins.detail.update": "Обновить",
   "settings.plugins.detail.updateAvailable": "Доступно обновление → v{version}",
   "settings.plugins.detail.versionChanged": "Доступна другая версия",
-  "settings.plugins.detail.updateNewSessionsNote": "Вступит в силу в новых задачах",
+  "settings.plugins.detail.updateNewSessionsNote": "Вступит в силу в новых сессиях",
   "settings.plugins.checkForUpdates": "Проверить обновления",
   "settings.plugins.checkForUpdates.found": "Найдено обновлений плагинов: {count}",
   "settings.plugins.checkForUpdates.none": "Все установленные плагины актуальны",

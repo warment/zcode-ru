@@ -289,5 +289,5 @@
   "settings.subagents.color.red": "Красный",
   "settings.subagents.color.yellow": "Жёлтый",
   "settings.mcp.failure.not_authenticated": "Вы не вошли в систему. Войдите в ZCode, чтобы использовать этот MCP-сервер.",
-  "settings.mcp.failure.coding_plan_required": "У аккаунта нет Coding Plan. Купите или настройте Coding Plan, чтобы использовать этот MCP-сервер."
+  "settings.mcp.failure.coding_plan_required": "У аккаунта нет тарифного плана. Купите или настройте тарифный план, чтобы использовать этот MCP-сервер."
 }
