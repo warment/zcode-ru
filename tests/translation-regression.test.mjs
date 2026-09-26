@@ -147,8 +147,11 @@ test('installer translations preserve interpolation and all executable code', ()
     for (const variable of expectedVariables[index]) assert.ok(message.includes(variable), `${index}: ${variable}`);
     assert.equal((message.match(/\$/g) ?? []).length, expectedVariables[index].join('').split('$').length - 1, `message ${index}`);
   });
-  const normalized = installer.replace(/^\uFEFF/, '').replace(/Write-Host "[^"\n]*"/g, 'Write-Host "MESSAGE"');
+  const normalized = installer
+    .replace(/^\uFEFF/, '')
+    .replace(/\$Version = "v[^"]*"/, '$Version = "VERSION"')
+    .replace(/Write-Host "[^"\n]*"/g, 'Write-Host "MESSAGE"');
   const executableHash = createHash('sha256').update(normalized).digest('hex');
-  assert.equal(executableHash, 'db189f3f76b069b2f87151610e50d6f1420eacbed4feab54fa3378d0166bab05');
+  assert.equal(executableHash, '139d96e524db7fc7ec3819e2739d762e0f7274ec762d83bf85de5a44fc78b834');
   assert.match(installer, /\$Url = "https:\/\/github.com\/\$Repo\/releases\/download\/\$Version\/app-ru-win\.asar"/);
 });
