@@ -163,10 +163,6 @@
   "settings.modelProvider.testModel.error.server": "Ошибка сервера",
   "settings.modelProvider.testModel.error.unknown": "Проверка не удалась",
   "settings.modelProvider.testModel.failed": "Не удалось подключиться",
-  "settings.modelProvider.testModel.failedWithReason": "Не удалось подключиться: {reason}",
-  "settings.modelProvider.testModel.success": "Подключено!",
-  "settings.modelProvider.testModel.testing": "Проверка…",
   "settings.modelProvider.useSubscription": "Использовать подписку",
-  "settings.modelProvider.viewUsage": "Посмотреть статистику",
-  "settings.modelProvider.zapiPresetEmpty": "Список моделей ZAPI ещё не синхронизирован. Проверьте подключение к внутренней сети и обновите."
+  "settings.modelProvider.viewUsage": "Посмотреть статистику"
 }

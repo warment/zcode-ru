@@ -150,8 +150,6 @@
   "settings.toolGroupingTerminalDescription": "Объединяет подряд идущие изменяющие команды оболочки в раздел «Терминал».",
   "settings.toolGroupingChanges": "Группировать изменения файлов",
   "settings.toolGroupingChangesDescription": "Объединяет подряд идущие вызовы Write, Edit и ApplyPatch в раздел «Изменения».",
-  "settings.optimizeAgentExperience": "Улучшать опыт использования",
-  "settings.optimizeAgentExperienceDescription": "Разрешите использовать ваши беседы для улучшения опыта работы с агентом. Мы заботимся о конфиденциальности и безопасности ваших данных.",
   "settings.zcodeInteractionBehaviorDescription": "Пока ZCode работает, последующие действия добавляются в очередь или направляются на выполнение после следующего вызова инструмента.",
   "settings.askUserQuestionAutoResolution": "Продолжать без ответа через 5 минут",
   "settings.askUserQuestionAutoResolutionDescription": "Если включено, агент продолжает работу, если вопрос остаётся без ответа 5 минут. Если выключено, текущие и будущие вопросы будут ждать вашего ответа.",

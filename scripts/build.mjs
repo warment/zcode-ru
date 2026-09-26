@@ -141,9 +141,9 @@ let s = readFileSync(sP, 'utf8');
 s = patchExploreCounts(s);
 log('styles:', stylesFile);
 s = patch('селектор: option ru-RU', s,
-  /\(0,([\w$]+)\.jsx\)\((\w+),\{value:`en-US`,children:(\w+)\.formatMessage\(\{id:`settings\.locale\.en-US`\}\)\}\)/g,
-  (m0, jsx, comp, varName) =>
-    `(0,${jsx}.jsx)(${comp},{value:\`en-US\`,children:${varName}.formatMessage({id:\`settings.locale.en-US\`})}),(0,${jsx}.jsx)(${comp},{value:\`ru-RU\`,children:\`Русский\`})`,
+  /\(0,([\w$]+)\.jsx\)\((\w+),\{value:`en-US`,children:(\w+)\.formatMessage\(\{id:`((?:sidebar\.)?settings\.locale\.en-US)`\}\)\}\)/g,
+  (m0, jsx, comp, varName, id) =>
+    `(0,${jsx}.jsx)(${comp},{value:\`en-US\`,children:${varName}.formatMessage({id:\`${id}\`})}),(0,${jsx}.jsx)(${comp},{value:\`ru-RU\`,children:\`Русский\`})`,
   { min: 1 });
 s = patch('селектор: option ru-RU (+testid)', s,
   /\(0,([\w$]+)\.jsx\)\((\w+),\{value:`en-US`,"data-testid":(\w+)\((\w+),`en-US`\),children:(\w+)\.formatMessage\(\{id:`settings\.locale\.en-US`\}\)\}\)/g,
@@ -164,7 +164,9 @@ const RU_SMALL = {
 };
 for (const [prefix, ruObj] of Object.entries(RU_SMALL)) {
   const f = readdirSync(A).find(f => f.startsWith(prefix));
-  if (!f) { fails.push(`мелкий словарь не найден: ${prefix}`); continue; }
+  // process-monitor удалён апстримом в 3.14.3 (чанк отсутствует в чистом дереве) —
+  // отсутствие файла не ломает приложение, только предупреждение.
+  if (!f) { log(`  ~ warn мелкий словарь отсутствует в дереве (пропущен): ${prefix}`); continue; }
   const fp = join(A, f);
   let m = readFileSync(fp, 'utf8');
   const anchor = m.match(/\w+=\{"zh-CN":\{/);
@@ -317,6 +319,24 @@ for (const f of [iP, sP, ...changedSweep]) {
   const r = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });
   log(`  ${r.status === 0 ? 'ok' : '!! FAIL'} ${f.replace(BUILDTREE, '')}`);
   if (r.status !== 0) { fails.push('parse: ' + f); if (r.stderr) log(r.stderr.slice(0, 400)); }
+}
+
+// --- 7b. версия package.json: апстрим не бампает (3.10.1 при 3.14.3) ---
+// Electron app.getVersion() читает её: About и updater врут без синка.
+const appVersionSync = (() => {
+  try { return spawnSync('/usr/libexec/PlistBuddy', ['-c', 'Print :CFBundleShortVersionString', join(APP, 'Contents/Info.plist')], { encoding: 'utf8' }).stdout.trim(); }
+  catch { return null; }
+})();
+if (appVersionSync) {
+  const pjPath = join(BUILDTREE, 'package.json');
+  try {
+    const pj = JSON.parse(readFileSync(pjPath, 'utf8'));
+    if (pj.version !== appVersionSync) {
+      pj.version = appVersionSync;
+      writeFileSync(pjPath, JSON.stringify(pj, null, 2));
+      log(`  ok [package.json:версия] -> ${appVersionSync}`);
+    } else log(`  ok [package.json:версия] уже ${appVersionSync}`);
+  } catch (e) { log('  ~ warn [package.json:версия] пропущен: ' + e.message); }
 }
 
 // --- 8. упаковка ---

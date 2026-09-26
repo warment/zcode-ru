@@ -133,7 +133,6 @@
   "automations.form.prompt.label": "Инструкции",
   "automations.form.prompt.placeholder": "Что эта задача должна делать при каждом запуске?",
   "automations.form.model.label": "Модель",
-  "automations.form.model.inherit": "Модель по умолчанию",
   "automations.form.model.previewRetry": "Не удалось загрузить данные модели. Повторить",
   "automations.form.workspaceUnavailableLabel": "Нет доступного проекта",
   "automations.form.workspaceUnavailable": "Откройте доступный проект, прежде чем создавать задачу по расписанию.",

@@ -5,7 +5,7 @@ param([switch]$Restore)
 
 $ErrorActionPreference = "Stop"
 $Repo = "warment/zcode-ru"
-$Version = "v2.0.3"
+$Version = "v2.0.4"
 $Candidates = @(
   "$env:LOCALAPPDATA\Programs\zcode\resources",
   "$env:ProgramFiles\ZCode\resources",
